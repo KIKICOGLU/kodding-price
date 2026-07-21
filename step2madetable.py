@@ -2,7 +2,7 @@ import pandas as pd
 import yfinance as yf
 import matplotlib.pyplot as plt
 
-# veri çekme
+# veri çekme'!!!
 hisse_kodu = "THYAO.IS"
 print(f"[{hisse_kodu}] verileri Yahoo Finance üzerinden çekiliyor...\n")
 
@@ -28,19 +28,19 @@ else:
     print(f"\nDikkat: Veri setinde toplam {eksik_veri.sum()} adet eksik veri var.")
 print("\n" + "="*50 + "\n")
 
-# 4. Matplotlib ile Kapanış (Close) Fiyatı Grafiği
+# 4. grafik tablosu açma
 plt.figure(figsize=(12, 6))
 
-# X eksenine Tarih (Date), Y eksenine Kapanış (Close) veriyoruz
+# X eksenine Tarih (Date), Y eksenine Kapanış (Close) çizgiye başlık, renk kalınlık ayarı
 plt.plot(df['Date'], df['Close'], label=f'{hisse_kodu} Kapanış Fiyatı', color='tab:blue', linewidth=1.5)
 
-# Grafik süslemeleri
+# Grafik görüntü ayarları 
 plt.title(f'{hisse_kodu} - Zaman İçindeki Kapanış Fiyatı Değişimi', fontsize=14, fontweight='bold')
 plt.xlabel('Tarih', fontsize=12)
 plt.ylabel('Fiyat (TL)', fontsize=12)
 plt.grid(True, linestyle='--', alpha=0.6) # Arka plana kılavuz çizgiler
 plt.legend()
 
-# Grafiği ekrana bas
+# ekrana ver
 plt.tight_layout()
 plt.show()
