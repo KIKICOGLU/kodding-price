@@ -71,6 +71,5 @@ Plan: Mevcut Docker mimarisinin, yerel makinelerden çıkarılarak bulut bilişi
 
 Plan: Sadece tek bir hissenin yönünü tahmin etmek yerine, kullanıcının seçtiği birden fazla hisse senedini analiz ederek, modern portföy teorisine (Markowitz) göre optimum ağırlık dağılımı ve "Risk/Ödül" skorlaması sunan yeni bir API uç noktası (endpoint) geliştirilecektir.
 
->>>>>>> 5326e4f4c6e2da04ff255393d51e3337c0ff0d05
 Bu eklenti, projeni sadece bir "öğrenci denemesi" olmaktan çıkarıp, adeta bir fintek (FinTech) startup'ının iş planına dönüştürür.
 
