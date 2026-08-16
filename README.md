@@ -1,66 +1,52 @@
-# 📈 Borsa Fiyat Tahmini: PyTorch ile LSTM ve GRU Karşılaştırması
+📈 Fiyat Projeksiyon Motoru: Mikroservis Mimarisi ile Yapay Zeka (LSTM vs GRU)
+Bu proje, Microsoft AI Innovators programı kapsamında derin öğrenme teknikleri (PyTorch) kullanılarak borsa hisse senedi kapanış fiyatlarını tahmin etmek amacıyla sıfırdan geliştirilmiş, uçtan uca (end-to-end) bir yazılım mimarisidir.
 
-Bu proje, derin öğrenme (Deep Learning) teknikleri kullanarak zaman serisi verileri üzerinden borsa hisse senedi kapanış fiyatlarını tahmin etmeyi amaçlamaktadır. Proje kapsamında **PyTorch** kullanılarak iki farklı Tekrarlayan Sinir Ağı (RNN) mimarisi olan **LSTM (Long Short-Term Memory)** ve **GRU (Gated Recurrent Unit)** sıfırdan inşa edilmiş, eğitilmiş ve performansları gerçek veriler üzerinde kıyaslanmıştır.
+Proje standart bir makine öğrenmesi betiği olmaktan çıkarılmış; FastAPI ile Backend, Streamlit ile Frontend olarak ikiye ayrılmış ve Docker ile donanım bağımsız bir konteyner mimarisine (Production-Ready) taşınmıştır.
 
----
+🚀 Sistem Mimarisi ve Kullanılan Teknolojiler
+Sistem sürdürülebilirlik, ölçeklenebilirlik ve yüksek performans odaklı bir mikroservis yapısında tasarlanmıştır:
 
-## 🚀 Proje Adımları ve Mimari
+1. Backend Katmanı / API (api.py)
+Teknoloji: FastAPI, PyTorch, yfinance, scikit-learn
 
-Proje, sürdürülebilirlik ve kod okunabilirliği açısından modüler bir yapıda tasarlanmıştır. Sistem 4 ana adımdan (ve dosyadan) oluşur:
+Görev: Sistemin "Motor" kısmıdır. yfinance üzerinden finansal verileri çeker, ffill() ve dropna() algoritmalarıyla verideki "NaN" tatil boşluklarını temizler ve tensör boyutlandırmalarını (normalization) yapar. Gelen istekler doğrultusunda LSTM ve GRU modellerini eğitip sonuçları JSON formatında arayüze servis eder.
 
-### Adım 1: Veri Toplama (`data_ingestion.py`)
-* **Ne Yapıyor?** `yfinance` kütüphanesi kullanılarak Yahoo Finance API'sine bağlanılır.
-* **Detay:** Belirtilen hisse senedinin (örn: THYAO.IS) geçmiş 10 yıllık borsa hareketleri indirilir. Eksik veya hatalı veriler (NaN) temizlenerek veri seti analize hazır hale getirilir.
+2. Yapay Zeka Modelleri (models_v8.py)
+LSTM (Long Short-Term Memory): Uzun vadeli trendleri hafızasında tutarak daha temkinli ve stabil projeksiyonlar çizen 3 kapılı model.
 
-### Adım 2: Veri Ön İşleme (`data_preprocessing.py`)
-* **Ne Yapıyor?** Ham veriler makine öğrenmesi modelinin anlayabileceği matematiksel tensörlerin temeline oturtulur.
-* **Detay:** 
-  * Veriler ağın ağırlıklarını bozmaması için `MinMaxScaler` ile **-1 ile 1** arasına ölçeklenir (Normalization).
-  * **Kayan Pencere (Sliding Window):** Algoritmanın geçmişe bakarak öğrenmesi için veriler 20 günlük paketler (pencereler) halinde dilimlenir. Sistem, geçmiş 20 güne bakarak 21. günü tahmin edecek şekilde (X ve y matrisleri) ayarlanır.
-  * Veri kronolojik sıra bozulmadan %80 Eğitim (Train) ve %20 Test (Test) olarak ikiye ayrılır.
+GRU (Gated Recurrent Unit): Daha hafif ve 2 kapılı yapısıyla piyasadaki ani hareketlere daha agresif ve hızlı tepki veren mimari.
 
-### Adım 3: Model İnşası (`models.py`)
-* **Ne Yapıyor?** PyTorch `nn.Module` tabanlı yapay sinir ağı mimarileri kurulur.
-* **Detay:**
-  * **LSTM Modeli:** 3 kapılı (gate) yapısı ve uzun/kısa süreli hafıza hücreleriyle zaman serilerindeki uzun vadeli ilişkileri öğrenmek üzere tasarlanmıştır.
-  * **GRU Modeli:** 2 kapılı, daha hafif yapısıyla sadece gizli durumu (hidden state) kullanarak işlem yapar.
-  * *Hiperparametreler:* Her iki model de 1 girdi boyutu, 32 gizli nöron, 2 katman ve 1 çıktı boyutu ile yapılandırılmıştır.
+Akıllı Fren (Early Stopping): Modelin veriyi ezberlemesini (overfitting) ve gradyan patlamalarını (Exploding Gradients) engellemek için sisteme özel bir adaptif durdurma mekanizması entegre edilmiştir.
 
-### Adım 4: Eğitim ve Değerlendirme (`main.py`)
-* **Ne Yapıyor?** Sistemin orkestrasyonunu sağlar.
-* **Detay:** Matrisler PyTorch Tensörlerine (3 boyutlu) dönüştürülür. Modeller `Adam` optimizasyon algoritması ve `MSELoss` (Ortalama Kare Hatası) kullanılarak 50 epoch boyunca eğitilir. Eğitilen modeller test verisiyle sınanarak tahminleri grafik üzerine aktarılır.
+3. Frontend Katmanı / Vitrin (appd.py)
+Teknoloji: Streamlit, Plotly, Pandas, Requests
 
----
+Görev: Kullanıcının sistemle etkileşime girdiği kurumsal finans paneli. HTTP/REST istekleri atarak API'den aldığı karmaşık matrisleri, Plotly kullanarak interaktif, yakınlaştırılabilir ve modern grafiklere dönüştürür.
 
-## 📊 Test Sonuçları ve Kıyaslama
+4. DevOps ve Konteynerleştirme (Dockerfile & docker-compose.yml)
+Görev: Sistemin Python sürümü veya kütüphane çakışması yaşamadan, dünyadaki herhangi bir bilgisayarda (işletim sisteminden bağımsız) tek tıkla ve hatasız şekilde çalışmasını sağlayan izole ağ yapısı.
 
-Projeyi çalıştırdığınızda modeller test verisi üzerinde sınanır ve **RMSE (Kök Ortalama Kare Hatası)** değerleri hesaplanır. 
+🛠️ Kurulum ve Çalıştırma Rehberi (Çok Kolay!)
+Proje Docker mimarisine sahip olduğu için karmaşık kütüphane kurulumlarıyla veya sürüm çatışmalarıyla uğraşmanıza gerek yoktur. Sadece aşağıdaki adımları izlemeniz yeterlidir:
 
-**Model Kıyaslama Analizi:**
-* Yapılan testler sonucunda **GRU modelinin**, LSTM'e kıyasla gerçek fiyat hareketlerini daha düşük hata payı (RMSE) ile yakaladığı gözlemlenmiştir.
-* **Nedeni:** Kullanılan veri setinin tek değişkenli (sadece Kapanış fiyatı) ve nispeten küçük olması, kompleks (çok parametreli) LSTM yapısında hafif bir ezberlemeye (overfitting) yol açarken; daha sade bir mimariye sahip olan GRU modeli, ana trendi çok daha başarılı bir şekilde genellemiştir.
+1. Depoyu Klonlayın:
 
----
-
-## 🛠️ Kurulum Rehberi
-
-Projeyi kendi ortamınızda çalıştırmak için sırasıyla aşağıdaki adımları izleyin:
-
-**1. Depoyu Klonlayın:**
-```bash
-git clone [https://github.com/KULLANICI_ADINIZ/REPO_ADINIZ.git](https://github.com/KULLANICI_ADINIZ/REPO_ADINIZ.git)
+Bash
+git clone https://github.com/KULLANICI_ADINIZ/REPO_ADINIZ.git
 cd REPO_ADINIZ
-```
+2. Docker Orkestrasyonunu Başlatın:
+Bilgisayarınızda Docker (Docker Desktop) açıkken proje dizininde komut satırına sadece şu kodu yazın:
 
-2. Gerekli Kütüphaneleri Yükleyin:
-Terminal veya komut satırında aşağıdaki komutu çalıştırarak bağımlılıkları indirin:
-```bash
-pip install torch pandas numpy scikit-learn matplotlib yfinance
-```
+Bash
+docker compose up --build
+3. Sisteme Giriş Yapın:
+Terminalde kurulum tamamlandığında, tarayıcınızı açın ve aşağıdaki adrese giderek kurumsal arayüze ulaşın:
+👉 http://localhost:8501
 
-3. Projeyi Çalıştırın:
-Ana dosyayı çalıştırarak veri çekme, eğitim ve test süreçlerini başlatın:
-```bash
-python main.py
-```
+📊 Öne Çıkan Mühendislik Yaklaşımları
+Data Preprocessing & Zırhı: Resmi tatil günlerinin yarattığı veri boşlukları (NaN), sistemi çökertmemesi için ileriye dönük doldurma yöntemleriyle optimize edilmiştir.
+
+Asenkron Mikroservis (Microservices): Arayüz ve model eğitimi birbirinden ayrı portlarda (8501 ve 8000) çalıştırılarak işlem yükü izole edilmiştir.
+
+Dinamik Hiperparametre Kontrolü: Kullanıcılar arayüz üzerinden modeli istedikleri Epoch sayısıyla veya "Akıllı Fren" aktif/pasif durumuyla özgürce test edebilirler.
 
