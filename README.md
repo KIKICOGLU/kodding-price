@@ -1,4 +1,6 @@
 📈 Fiyat Projeksiyon Motoru: Mikroservis Mimarisi ile Yapay Zeka (LSTM vs GRU)
+
+
 Bu proje, Microsoft AI Innovators programı kapsamında derin öğrenme teknikleri (PyTorch) kullanılarak borsa hisse senedi kapanış fiyatlarını tahmin etmek amacıyla sıfırdan geliştirilmiş, uçtan uca (end-to-end) bir yazılım mimarisidir.
 
 Proje standart bir makine öğrenmesi betiği olmaktan çıkarılmış; FastAPI ile Backend, Streamlit ile Frontend olarak ikiye ayrılmış ve Docker ile donanım bağımsız bir konteyner mimarisine (Production-Ready) taşınmıştır.
