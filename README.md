@@ -19,7 +19,7 @@ LSTM (Long Short-Term Memory): Uzun vadeli trendleri hafızasında tutarak daha 
 
 GRU (Gated Recurrent Unit): Daha hafif ve 2 kapılı yapısıyla piyasadaki ani hareketlere daha agresif ve hızlı tepki veren mimari.
 
-Akıllı Fren (Early Stopping): Modelin veriyi ezberlemesini (overfitting) ve gradyan patlamalarını (Exploding Gradients) engellemek için sisteme özel bir adaptif durdurma mekanizması entegre edilmiştir.
+Akıllı Fren: Modelin veriyi ezberlemesini (overfitting) ve gradyan patlamalarını engellemek için sisteme özel bir adaptif durdurma mekanizması entegre edilmiştir.
 
 3. Frontend Katmanı / Vitrin (appd.py)
 Teknoloji: Streamlit, Plotly, Pandas, Requests
@@ -58,10 +58,6 @@ Dinamik Hiperparametre Kontrolü: Kullanıcılar arayüz üzerinden modeli isted
 📰 Doğal Dil İşleme (NLP) ile Duyarlılık Analizi (Sentiment Analysis):
 
 Plan: Hisse fiyatları sadece geçmiş sayılara değil, küresel haberlere ve şirket duyurularına da bağlıdır. Gelecek sürümde sisteme FinBERT veya Azure Bilişsel Hizmetler (Cognitive Services) gibi NLP modelleri entegre edilerek; finansal haber metinlerinin, KAP bildirimlerinin ve sosyal medya verilerinin anlık olarak taranması ve piyasa duyarlılığının (pozitif/negatif algı) tahminleme ağırlıklarına katılması planlanmaktadır.
-
-📊 Çok Değişkenli (Multi-Variate) Zaman Serisi Analizi:
-
-Plan: Şu anki mimari tek değişkenli (sadece Kapanış Fiyatı - Close) çalışmaktadır. Gelecek aşamada; İşlem Hacmi (Volume), RSI, MACD gibi teknik indikatörler ile faiz kararları gibi makroekonomik verilerin de matrise dahil edilerek modelin çok değişkenli bir yapıya (Multi-variate LSTM/GRU) geçirilmesi hedeflenmektedir.
 
 ☁️ Bulut Tabanlı Otomasyon ve CI/CD (Cloud Deployment):
 
